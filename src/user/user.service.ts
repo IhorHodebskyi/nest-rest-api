@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './userDTO/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserResponse, UserFromDB } from 'src/interface/interface';
+import { UserFromDB } from 'src/interface/interface';
 
 @Injectable()
 export class UserService {
@@ -14,7 +14,7 @@ export class UserService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
+  async createUser(createUserDto: CreateUserDto) {
     const { email, password, name } = createUserDto;
     const existsEmail = await this.userModel.exists({
       email,
@@ -39,26 +39,8 @@ export class UserService {
       email: createdUser.email,
     });
 
-    const {
-      _id,
-      email: emailDB,
-      password: passwordDB,
-      name: nameDB,
-      createdAt,
-      updatedAt,
-      __v,
-    } = createdUser;
-
     return {
-      user: {
-        _id: _id.toString(),
-        email: emailDB,
-        password: passwordDB,
-        name: nameDB,
-        createdAt,
-        updatedAt,
-        __v,
-      },
+      createdUser,
       token,
     };
   }
