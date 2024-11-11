@@ -15,11 +15,9 @@ export class AuthService {
     password: string,
   ): Promise<BadRequestException | UserFromDB> {
     const user = await this.usersService.findOne(email);
+    if (!user) return null;
     const passwordIsMatch = await bcrypt.compare(password, user.password);
-    if (user && passwordIsMatch) {
-      return user;
-    }
-    return new BadRequestException('Invalid credentials');
+    return passwordIsMatch ? user : null;
   }
 
   async login(
@@ -27,6 +25,7 @@ export class AuthService {
   ): Promise<{ id: string; email: string; token: string }> {
     const { id, email } = user;
     const payload = { email: email, sub: id };
+
     return {
       id,
       email,

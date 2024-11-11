@@ -36,3 +36,8 @@ export interface CreateUserResponse {
   user: UserFromDB;
   token: string;
 }
+
+export interface LoginResponse {
+  id: string;
+  email: string;
+}

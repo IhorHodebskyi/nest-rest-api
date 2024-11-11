@@ -25,11 +25,7 @@ export class UserService {
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const createdUser = await this.userModel.create<{
-      email: string;
-      password: string;
-      name: string;
-    }>({
+    const createdUser = await this.userModel.create({
       email,
       password: passwordHash,
       name,
